@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dominio.Advogado;
+using Dominio.Endereco;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +11,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repositorio.Contexto;
+using Repositorio.Implementacao;
+using Repositorio.Interface;
+using Servico;
 
 namespace Advogados.Web
 {
@@ -28,6 +33,12 @@ namespace Advogados.Web
 
             services.AddDbContext<AdvogadoContexto>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddScoped(typeof(IAdvogadoRepositorio), typeof(AdvogadoRepositorio));
+            services.AddScoped(typeof(IEnderecoRepositorio), typeof(EnderecoRepositorio));
+
+            services.AddScoped(typeof(IAdvogadoServico), typeof(AdvogadoServico));
+            services.AddScoped(typeof(IEnderecoServico), typeof(EnderecoServico));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

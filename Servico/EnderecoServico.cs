@@ -6,10 +6,10 @@ using System.Text;
 
 namespace Servico
 {
-    public class EnderecoService : BaseServico<Endereco>, IEnderecoServico
+    public class EnderecoServico : BaseServico<Endereco>, IEnderecoServico
     {
         private readonly IEnderecoRepositorio _repositorio;
-        public EnderecoService(IEnderecoRepositorio repositorio) : base(repositorio)
+        public EnderecoServico(IEnderecoRepositorio repositorio) : base(repositorio)
         {
             _repositorio = repositorio;
         }
