@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Dominio.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Dominio.Endereco
 {
-    public interface IBaseServico<T> where T : class
+    public interface IBaseServico<T> where T : EntidadeBase
     {
         void Incluir(T entidade);
         void Atualizar(T entidade);

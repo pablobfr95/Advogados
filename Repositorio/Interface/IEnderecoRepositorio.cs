@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Repositorio.Interface
 {
-    public interface IEnderecoAdvogado : IBaseRepositorio<Endereco>
+    public interface IEnderecoRepositorio : IBaseRepositorio<Endereco>
     {
     }
 }
