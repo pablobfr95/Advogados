@@ -108,3 +108,6 @@ Repositorio/obj/
 .vs/
 Advogados.Web/bin/
 Servico/obj/
+Dominio/bin/
+Repositorio/bin/
+Servico/bin/

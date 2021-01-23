@@ -11,6 +11,7 @@ namespace Dominio.Endereco
         public string Bairro { get; set; }
         public string Cidade { get; set; }
         public string Estado { get; set; }
+        public int AdvogadoId { get; set; }
         public virtual Advogado.Advogado Advogado { get; set; }
     }
 }
