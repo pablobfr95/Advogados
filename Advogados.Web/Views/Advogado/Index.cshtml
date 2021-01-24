@@ -3,3 +3,208 @@
 *@
 @{
 }
+
+<div class="row">
+    <div class="col-12">
+        <table id="tblAdvogados" class="table table-striped table-bordered" style="width:100%">
+            <thead>
+                <tr>
+                    <th scope="col" data-priority="4" style="display:none">Id</th>
+                    <th scope="col" data-priority="1" width="50%">Nome</th>
+                    <th scope="col" data-priority="3" width="30%">Senioridade</th>
+                    <th scope="col" data-priority="2" width="20%">Opções</th>
+                       
+                </tr>
+            </thead>
+            <tbody>
+                    
+            </tbody>
+        </table>       
+    </div>
+</div>
+
+<div class="row" id="visualizacaoAdvogado">
+    <div class="col-12" id="tituloAdvogado">
+        <h1>Advogado</h1>
+    </div>
+    <div class="col-sm-12 col-lg-7">
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Nome</span>
+            </div>
+            <input type="text" readonly id="nomeAdvogado" class="form-control" aria-label="Nome">
+        </div>
+    </div>
+    <div class="col-sm-12 col-lg-5">
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Senioridade</span>
+            </div>
+            <input type="text" readonly id="senioridadeAdvogado" class="form-control" aria-label="Senioridade">
+        </div>
+    </div>
+</div>
+
+<div class="row" id="visualizacaoEnderecos">
+    <div class="col-12" id="enderecosAdvogados">
+        <h4>Endereços</h4>
+    </div>
+    
+    
+</div>
+
+
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+        tabela = $("#tblAdvogados").DataTable({
+            responsive: {
+                details: true
+            },
+            scrollCollapse: true,
+            paging: true,
+            bPaginate: true,
+            pageLength: 10,
+            bFilter: true,
+            bInfo: false,
+            bSort: true,
+            info: false,
+            responsive: true,
+            destroy: true,
+            aoColumns: [
+                {
+                    sName: "id",
+                    bVisible: false
+                },
+                {
+                    sName: "status"
+                },
+                {
+                    sName: "cid"
+                },
+                {
+                    mData: "IMAGE",
+                    "aTargets": [0],
+                    render: function (data, type, row, meta) {
+
+                        var btnVisulizar = '<a href="#" id="visualizarAdvogado" onclick="visualizacaoAdvogado(this)" idAdvogado= "' + row[0] + '">Visualizar</a>';
+                        var btnEditar = '<label> - </label>' + '<a href="#" onclick="editarAdvogado(this)" id="editarAdvogado" idAdvogado= "' + row[0] + '" >Editar</a>';
+                        var btnExcluir = '<label> - </label>' + '<a href="#" id="excluirAdvogado" idAdvogado= "' + row[0] + '" >Excluir</a>';
+                        return btnVisulizar + btnEditar + btnExcluir;
+
+                    }
+                },
+            ]
+        });
+
+
+        $(document).ready(function () {
+            listarAdvogados();
+        })
+
+        function listarAdvogados() {
+            $.get('@Url.Action("Listar")')
+                .fail(function (xhr, status, error) {
+                    swal({
+                        title: "Error !",
+                        text: "Error ao buscar os Advogados !\n" + "Error: " + xhr.responseText,
+                        icon: "error"
+                    });
+
+                })
+                .done(function (data) {
+
+                    $(data).each(function (i, item) {
+                        tabela.row.add([item.id, item.nome, item.senioridade
+                        ]).draw(false);
+                    })
+                })
+        }
+
+
+        function visualizacaoAdvogado(element) {
+
+            $('#visualizacaoAdvogado').fadeOut();
+            $('#visualizacaoEnderecos').fadeOut();
+
+            var idAdvogado = $(element).attr('idAdvogado');
+            $.get('@Url.Action("BuscarPorId")' + "?id=" + idAdvogado)
+                .fail(function (xhr, status, error) {
+
+                    swal({
+                        title: "Error !",
+                        text: "Error ao buscar as informações do Advogado !\n" + "Error: " + xhr.responseText,
+                        icon: "error"
+                    });
+
+                })
+                .done(function (data) {
+
+                    $('.enderecos').each(function (i, item) {
+                        $(item).remove();
+                    })
+
+                    $('#nomeAdvogado').val(data.nome);
+                    $('#senioridadeAdvogado').val(data.senioridade);
+                    $('#visualizacaoAdvogado').fadeIn('slow');
+
+                    $(data.enderecos).each(function (i, item) {
+
+                        var html =  '<div class="enderecos">' +
+                                    '<div class="col-sm-12 col-lg-6">' +
+                                        '<div class="input-group mb-3">'+
+                                            '<div class="input-group-append">' +
+                                                '<span class="input-group-text">Logradouro</span>' +
+                                            '</div>' +
+                                            '<input type="text" value="' + item.logradouro + '"readonly class="form-control logradouroAdvogado" aria-label="Logradouro">' +
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="col-sm-12 col-lg-6">'+
+                                        '<div class="input-group mb-3">' +
+                                            '<div class="input-group-append">'  +
+                                                '<span class="input-group-text">Bairro</span>' +
+                                            '</div>' +
+                                            '<input type="text" value="' + item.bairro + '" readonly class="form-control bairroAdvogado" aria-label="Bairro">' +
+                                         '</div>' +
+                                    '</div>' +
+                                    '<div class="col-sm-12 col-lg-6">' +
+                                        '<div class="input-group mb-3">' +
+                                            '<div class="input-group-append">' +
+                                                '<span class="input-group-text">Cidade</span>' +
+                                            '</div>' +
+                                            '<input type="text" value="' + item.cidade + '" readonly class="form-control cidadeAdvogado" aria-label="Cidade">' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="col-sm-12 col-lg-6">' +
+                                        '<div class="input-group mb-3">' +
+                                            '<div class="input-group-append">' +
+                                                '<span class="input-group-text">Estado</span>' +
+                                            '</div>' +
+                                            '<input type="text" value="' + item.estado + '" readonly  class="form-control estadoAdvogado" aria-label="Estado">' +
+                                        '</div>' +
+                                    '</div>' +
+                            '</div>'
+
+                        $('#enderecosAdvogados').append(html);
+
+                        if (i === data.enderecos.length - 1) {
+                            $('#visualizacaoEnderecos').fadeIn('slow');
+                        }
+                    })
+
+                    
+                })
+        }
+
+        function editarAdvogado(element) {
+            var idAdvogado = $(element).attr('idAdvogado');
+            window.location.href = "@Url.Action("Editar")" + "?id=" + idAdvogado;
+        }
+
+    </script>
+
+
+
+}

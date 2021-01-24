@@ -1,16 +1,12 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿
+@using Web.Models
 
-
-
+@model AdvogadoViewModel
 <form id="formularioCadastro">
-    <div class="form-row">
+    <div class="form-row" id="dadosAdvogado">
         <div class="col-md-8 col-sm-12 form-group">
             <label for="nomeAdvogado">Nome </label>
-            <input type="text" maxlength="50" required class="form-control" id="nomeAdvogado" aria-describedby="nome">
+            <input type="text" maxlength="50" value="@Model.Nome" required class="form-control" id="nomeAdvogado" aria-describedby="nome">
         </div>
         <div class="form-group col-sm-12 col-md-4">
             <label for="senioridadeAdvogado">Senioridade</label>
@@ -23,42 +19,204 @@
             </select>
         </div>
     </div>
-    
+
     <div class="form-row mb-2">
-        <div class="col-sm-12 form-group">
-            <label for="logradouroAdvogado">Logradouro </label>
-            <input type="text" maxlength="50" required class="form-control" id="logradouroAdvogado" aria-describedby="logradouro">
-        </div>
-        <div class="col-sm-12 col-lg-4 form-group">
-            <label for="bairroAdvogado">Bairro </label>
-            <input type="text" maxlength="50" required class="form-control" id="bairroAdvogado" aria-describedby="logradouro">
-        </div>
-        <div class="col-sm-12 col-lg-4 form-group">
-            <label for="cidadeAdvogado">Cidade </label>
-            <input type="text" maxlength="50" required class="form-control" id="cidadeAdvogado" aria-describedby="logradouro">
-        </div>
-        <div class="col-sm-12 col-lg-4 form-group">
-            <label for="estadoAdvogado">Estado </label>
-            <input type="text" maxlength="50" required class="form-control" id="estadoAdvogado" aria-describedby="logradouro">
-        </div>
+        <a href="#" id="adicionaEndereco" onclick="cadastrarEndereco()"><i class="fa fa-plus"></i> Adicionar Endereço</a>
     </div>
-    
+
+
+
+
     <div class="form-row">
-        <button type="submit" class="btn btn-primary">Cadastrar</button>
+        <button type="submit" class="btn btn-primary">Salvar</button>
     </div>
 
 
 </form>
 
-@section Scripts{ 
+@section Scripts{
     <script type="text/javascript">
+
+        var id = @Html.Raw(Model.Id);
+
 
         $('#formularioCadastro').on('submit', function (e) {
             e.preventDefault();
-        })
+            var nome = $('#nomeAdvogado').val();
+            var senioridade = $('#senioridadeAdvogado').val();
+            if (senioridade == null) {
+                $('#senioridadeAdvogado').focus();
+                return;
+            }
 
+            var enderecos = [];
+
+            $('.form-endereco').each(function (i, item) {
+                var logradouro = $(item).find('#logradouroAdvogado').val();
+                var bairro = $(item).find('#bairroAdvogado').val();
+                var cidade = $(item).find('#cidadeAdvogado').val();
+                var estado = $(item).find('#estadoAdvogado').val();
+                var endereco = {
+                    logradouro,
+                    bairro,
+                    cidade,
+                    estado
+                }
+                enderecos.push(endereco);
+            })
+
+            var advogado = {
+                id,
+                nome,
+                senioridade,
+                enderecos
+            }
+
+            if (id == 0) {
+
+                $.ajax({
+                    url: '@Url.Action("Cadastrar","Advogado")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(advogado),
+                })
+                .fail(function (xhr, status, error) {
+                    swal({
+                        title: "Error !",
+                        text: "Error ao salvar o Advogado !\n" + "Error: " + xhr.responseText,
+                        icon: "error",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                    });
+                })
+                .done(function () {
+
+                    swal({
+                        title: "Sucesso !",
+                        text: "Sucesso ao salvar o Advogado !",
+                        icon: "success",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                    });
+
+                    $('.swal-button--confirm').on('click', function () {
+                        setTimeout(function () {
+                            window.location.href = '@Url.Action("Index")';
+                        }, 2000)
+
+                    })
+
+                })
+
+            }
+            else {
+                $.ajax({
+                    url: '@Url.Action("Editar","Advogado")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(advogado),
+                })
+                .fail(function (xhr, status, error) {
+                    swal({
+                        title: "Error !",
+                        text: "Error ao salvar o Advogado !\n" + "Error: " + xhr.responseText,
+                        icon: "error",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                    });
+                })
+                .done(function () {
+
+                    swal({
+                        title: "Sucesso !",
+                        text: "Sucesso ao salvar o Advogado !",
+                        icon: "success",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                    });
+
+                    $('.swal-button--confirm').on('click', function () {
+                        setTimeout(function () {
+                            window.location.href = '@Url.Action("Index")';
+                        }, 2000)
+
+                    })
+
+                })
+            }
+
+
+            return false;
+        });
+
+
+        function cadastrarEndereco() {
+            var html = '<div class="form-row mb-2 form-endereco">' +
+                '<div class="col-sm-12 form-group">' +
+                '<label for="logradouroAdvogado">Logradouro </label>' +
+                '<input type="text" maxlength="50" required class="form-control" id="logradouroAdvogado" aria-describedby="logradouro">' +
+                '</div>' +
+                '<div class="col-sm-12 col-lg-4 form-group">' +
+                '<label for="bairroAdvogado">Bairro </label>' +
+                '<input type="text" maxlength="50" required class="form-control" id="bairroAdvogado" aria-describedby="logradouro">' +
+                '</div>' +
+                '<div class="col-sm-12 col-lg-4 form-group">' +
+                '<label for="cidadeAdvogado">Cidade </label>' +
+                '<input type="text" maxlength="50" required class="form-control" id="cidadeAdvogado" aria-describedby="logradouro">' +
+                '</div>' +
+                '<div class="col-sm-12 col-lg-4 form-group">' +
+                '<label for="estadoAdvogado">Estado </label>' +
+                '<input type="text" maxlength="50" required class="form-control" id="estadoAdvogado" aria-describedby="logradouro">' +
+                '</div>' +
+                '<a href="#" id="removeEndereco" onclick="removerEndereco(this)"><i class="fa fa-minus"></i> Remover Endereço</a>' +
+                '</div>';
+
+            $('#dadosAdvogado').append(html);
+        }
+
+        function removerEndereco(e) {
+            $(e).parent().remove();
+        }
 
     </script>
+
+    @if (Model.Senioridade != null)
+    {
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+
+                var senioridadeSalva = '@Html.Raw(Model.Senioridade)';
+                $('#senioridadeAdvogado option').each(function (i, item) {
+                    if ($(item).val() === senioridadeSalva) $(item).attr('selected', true);
+                })
+
+            })
+
+        </script>
+    }
+
+    @if (Model.Enderecos != null)
+    {
+
+        @foreach (var item in Model.Enderecos)
+        {
+            <script type="text/javascript">
+
+                            cadastrarEndereco();
+                            var ultimoEndereco = $('.form-endereco').last();
+                            $(ultimoEndereco).find('#logradouroAdvogado').val('@Html.Raw(item.Logradouro)');
+                            $(ultimoEndereco).find('#bairroAdvogado').val('@Html.Raw(item.Bairro)');
+                            $(ultimoEndereco).find('#cidadeAdvogado').val('@Html.Raw(item.Cidade)');
+                            $(ultimoEndereco).find('#estadoAdvogado').val('@Html.Raw(item.Estado)');
+
+            </script>
+        }
+
+
+
+    }
+
 }
 
 

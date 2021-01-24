@@ -9,7 +9,7 @@ namespace Dominio.Advogado
     {
         public string Nome { get;private set; }
         public string Senioridade { get;private set; }
-        public virtual IEnumerable<Endereco.Endereco> Enderecos { get;private set;  }
+        public virtual IEnumerable<Endereco.Endereco> Enderecos { get; set;  }
 
         protected Advogado()
         {
@@ -21,6 +21,7 @@ namespace Dominio.Advogado
             ValidarParaInclusao(pStrNome, pStrSenioridade);
             Nome = pStrNome;
             Senioridade = pStrSenioridade;
+
         }
         public Advogado(int pIntId, string pStrNome, string pStrSenioridade)
         {

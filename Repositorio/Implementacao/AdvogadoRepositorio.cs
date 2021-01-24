@@ -27,5 +27,12 @@ namespace Repositorio.Implementacao
         {
             return _contexto.Advogado.Include(a => a.Enderecos).AsNoTracking();
         }
+
+        public override void Atualizar(Advogado entidade)
+        {
+            _contexto.Entry(entidade).State = EntityState.Modified;
+            _contexto.SaveChanges();
+            _contexto.Entry(entidade).State = EntityState.Detached;
+        }
     }
 }

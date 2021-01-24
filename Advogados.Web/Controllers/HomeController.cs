@@ -20,7 +20,7 @@ namespace Advogados.Web.Controllers
 
         public IActionResult Index()
         {
-            return RedirectToAction("Cadastrar", "Advogado");
+            return RedirectToAction("Index", "Advogado");
         }
 
     }

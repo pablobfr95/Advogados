@@ -39,6 +39,9 @@ namespace Advogados.Web
 
             services.AddScoped(typeof(IAdvogadoServico), typeof(AdvogadoServico));
             services.AddScoped(typeof(IEnderecoServico), typeof(EnderecoServico));
+            services.AddRazorPages()
+                .AddRazorRuntimeCompilation();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
