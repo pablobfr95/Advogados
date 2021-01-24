@@ -4,6 +4,12 @@
 @{
 }
 
+
+<div class="row">
+    <div class="col-12 col-md-6 col-lg-4">
+        <button type="button" id="cadastrarAdvogado" class="btn btn-primary">Cadastrar Advogado</button>
+    </div>
+</div>
 <div class="row">
     <div class="col-12">
         <table id="tblAdvogados" class="table table-striped table-bordered" style="width:100%">
@@ -91,7 +97,7 @@
 
                         var btnVisulizar = '<a href="#" id="visualizarAdvogado" onclick="visualizacaoAdvogado(this)" idAdvogado= "' + row[0] + '">Visualizar</a>';
                         var btnEditar = '<label> - </label>' + '<a href="#" onclick="editarAdvogado(this)" id="editarAdvogado" idAdvogado= "' + row[0] + '" >Editar</a>';
-                        var btnExcluir = '<label> - </label>' + '<a href="#" id="excluirAdvogado" idAdvogado= "' + row[0] + '" >Excluir</a>';
+                        var btnExcluir = '<label> - </label>' + '<a href="#" onclick="excluirAdvogado(this)" id="excluirAdvogado" nomeAdvogado="' + row[1] +'" idAdvogado= "' + row[0] + '" >Excluir</a>';
                         return btnVisulizar + btnEditar + btnExcluir;
 
                     }
@@ -194,7 +200,7 @@
                         }
                     })
 
-                    
+
                 })
         }
 
@@ -202,6 +208,59 @@
             var idAdvogado = $(element).attr('idAdvogado');
             window.location.href = "@Url.Action("Editar")" + "?id=" + idAdvogado;
         }
+
+        function excluirAdvogado(element) {
+            var idAdvogado = $(element).attr('idAdvogado');
+            var nomeAdvogado = $(element).attr('nomeAdvogado');
+
+
+            swal({
+                title: "Aviso",
+                text: "Confirmar a exclusão do Advogado ?\n" + "Nome: " + nomeAdvogado,
+                icon: "warning",
+                closeOnClickOutside: false,
+                closeOnEsc: false,
+                buttons: {
+                    nao: "Não",
+                    sim: "Sim"
+                }
+            });
+
+
+            $('.swal-button--sim').on('click', function () {
+                $.ajax({
+                url: '@Url.Action("Deletar","Advogado")' + "?id=" + idAdvogado,
+                type: 'DELETE'
+                })
+                .fail(function (xhr, status, error) {
+                    swal({
+                        title: "Error !",
+                        text: "Error ao excluir o Advogado !\n" + "Error: " + xhr.responseText,
+                        icon: "error",
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                    });
+
+                })
+                .done(function () {
+                    swal({
+                        title: "Sucesso",
+                        text: "Sucesso ao remover o Advogado !",
+                        icon: "success",
+                    });
+
+                    setTimeout(function () {
+                        window.location.reload();
+                    },2000)
+                })
+
+            })
+
+        }
+
+        $('#cadastrarAdvogado').on('click', function () {
+            window.location.href = "@Url.ActionLink("Cadastrar","Advogado")";
+        })
 
     </script>
 

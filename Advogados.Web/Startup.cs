@@ -59,6 +59,8 @@ namespace Advogados.Web
 
             app.UseRouting();
 
+            UpdateDatabase(app);
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -67,6 +69,20 @@ namespace Advogados.Web
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope())
+            {
+                using (var context = serviceScope.ServiceProvider.GetService<AdvogadoContexto>())
+                {
+                    context.Database.Migrate();
+                }
+
+            }
         }
     }
 }

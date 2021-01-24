@@ -9,6 +9,7 @@ using Web.Models;
 
 namespace Web.Controllers
 {
+    [Route("[controller]")]
     public class AdvogadoController : Controller
     {
         private readonly IAdvogadoServico _servico;
@@ -25,7 +26,7 @@ namespace Web.Controllers
             return View();
         }
 
-        
+        [HttpGet("Cadastrar")]
         public IActionResult Cadastrar()
         {
             return View("Formulario", new AdvogadoViewModel());
@@ -133,6 +134,22 @@ namespace Web.Controllers
                 var advogadoModel = AdvogadoViewModel.EntidadeParaModel(advogado);
                 advogadoModel.Enderecos = EnderecoViewModel.ListaEntidadeParaModel(advogado.Enderecos);
                 return new JsonResult(advogadoModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpDelete("Deletar")]
+        public IActionResult Deletar(int id)
+        {
+            try
+            {
+                var advogado = _servico.BuscarPorId(id);
+                if (advogado == null) return NotFound("Advogado não encontrado !");
+                _servico.Excluir(advogado);
+                return Ok();
             }
             catch (Exception ex)
             {
