@@ -1,0 +1,64 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+
+<form id="formularioCadastro">
+    <div class="form-row">
+        <div class="col-md-8 col-sm-12 form-group">
+            <label for="nomeAdvogado">Nome </label>
+            <input type="text" maxlength="50" required class="form-control" id="nomeAdvogado" aria-describedby="nome">
+        </div>
+        <div class="form-group col-sm-12 col-md-4">
+            <label for="senioridadeAdvogado">Senioridade</label>
+            <select id="senioridadeAdvogado" class="form-control" required>
+                <option selected disabled>Escolha...</option>
+                <option value="Junior">Junior</option>
+                <option value="Pleno">Pleno</option>
+                <option value="Senior">Senior</option>
+                <option value="Master">Master</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="form-row mb-2">
+        <div class="col-sm-12 form-group">
+            <label for="logradouroAdvogado">Logradouro </label>
+            <input type="text" maxlength="50" required class="form-control" id="logradouroAdvogado" aria-describedby="logradouro">
+        </div>
+        <div class="col-sm-12 col-lg-4 form-group">
+            <label for="bairroAdvogado">Bairro </label>
+            <input type="text" maxlength="50" required class="form-control" id="bairroAdvogado" aria-describedby="logradouro">
+        </div>
+        <div class="col-sm-12 col-lg-4 form-group">
+            <label for="cidadeAdvogado">Cidade </label>
+            <input type="text" maxlength="50" required class="form-control" id="cidadeAdvogado" aria-describedby="logradouro">
+        </div>
+        <div class="col-sm-12 col-lg-4 form-group">
+            <label for="estadoAdvogado">Estado </label>
+            <input type="text" maxlength="50" required class="form-control" id="estadoAdvogado" aria-describedby="logradouro">
+        </div>
+    </div>
+    
+    <div class="form-row">
+        <button type="submit" class="btn btn-primary">Cadastrar</button>
+    </div>
+
+
+</form>
+
+@section Scripts{ 
+    <script type="text/javascript">
+
+        $('#formularioCadastro').on('submit', function (e) {
+            e.preventDefault();
+        })
+
+
+    </script>
+}
+
+
